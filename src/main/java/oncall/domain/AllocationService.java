@@ -42,13 +42,8 @@ public class AllocationService {
             Employee nextEmployee = changedAllocations.get(i + 1).getEmployee();
             if (thisEmployee.equals(nextEmployee)) {
                 Employee tmp = nextEmployee;
-                int finalI = i + 1;
-                Employee change = changedAllocations.stream()
-                        .skip(i + 2)
-                        .filter(allocation -> equal(allocation.getLocalDate(), allocations.get(finalI).getLocalDate()))
-                        .map(Allocation::getEmployee)
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_CHANGE.getMessage()));
+                int targetIndex = i + 1;
+                Employee change = findTargetEmployee(changedAllocations, i, targetIndex);
                 changedAllocations.get(i + 1).changeEmployee(change);
                 changedAllocations.stream()
                         .skip(i + 2)
@@ -57,6 +52,16 @@ public class AllocationService {
             }
         }
         return changedAllocations;
+    }
+
+    private Employee findTargetEmployee(List<Allocation> changedAllocations, int i, int targetIndex) {
+        return changedAllocations.stream()
+                .skip(i + 2)
+                .filter(allocation -> equal(allocation.getLocalDate(),
+                        changedAllocations.get(targetIndex).getLocalDate()))
+                .map(Allocation::getEmployee)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_CHANGE.getMessage()));
     }
 
     private boolean equal(LocalDate localDate1, LocalDate localDate2) {
