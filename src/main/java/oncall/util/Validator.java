@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Validator {
     private static final String NUMBER_REGEX = "^[0-9]+$";
+    private static final String PATTERN_REGEX = "^[0-9]+,[가-힣]+$";
 
     public static void validateNumeric(String input) {
         if (!input.matches(NUMBER_REGEX)) {
@@ -11,17 +12,24 @@ public class Validator {
         }
     }
 
-    public void validateRange(String input, int min, int max) {
+    public static void validateRange(String input, int min, int max) {
         int number = Integer.parseInt(input);
-        if (number < min || number > max){
+        if (number < min || number > max) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_OUT_OF_INT_RANGE.getMessage());
         }
     }
-    public void validateDuplicated(List<String> strings){
-        if(strings.stream()
+
+    public static void validateDuplicated(List<String> strings) {
+        if (strings.stream()
                 .distinct()
-                .count() != strings.size()){
+                .count() != strings.size()) {
             throw new IllegalArgumentException(ErrorMessage.DUPLICATED.getMessage());
+        }
+    }
+
+    public static void validateRegex(String input) {
+        if (!input.matches(PATTERN_REGEX)) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_PATTERN.getMessage());
         }
     }
 }
