@@ -2,6 +2,8 @@ package oncall.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import oncall.domain.AllocationGroup;
+import oncall.domain.AllocationService;
 import oncall.domain.Employee;
 import oncall.domain.EmployeeGroup;
 import oncall.domain.WorkDays;
@@ -19,8 +21,10 @@ public class Controller {
 
     public void start() {
         WorkDays workDays = createWorkDays();
-        EmployeeGroup weekdayEmployees = createWeekdayEmployees();
-        EmployeeGroup weekendEmployees = createWeekendEmployees();
+        EmployeeGroup weekdayGroup = createWeekdayGroup();
+        EmployeeGroup weekendGroup = createWeekendGroup();
+        AllocationService allocationService = new AllocationService(workDays, weekdayGroup, weekendGroup);
+        AllocationGroup allocationGroup = allocationService.allocate();
     }
 
 
@@ -35,7 +39,7 @@ public class Controller {
         }
     }
 
-    private EmployeeGroup createWeekdayEmployees() {
+    private EmployeeGroup createWeekdayGroup() {
         while (true) {
             try {
                 List<String> input = inputView.readWeekdayEmployees();
@@ -49,7 +53,7 @@ public class Controller {
         }
     }
 
-    private EmployeeGroup createWeekendEmployees() {
+    private EmployeeGroup createWeekendGroup() {
         while (true) {
             try {
                 List<String> input = inputView.readWeekdayEmployees();

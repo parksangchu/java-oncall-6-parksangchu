@@ -21,4 +21,8 @@ public class EmployeeGroup {
     private void validateRange(List<Employee> employees) {
         Validator.validateRange(employees.size(), MIN_EMPLOYEES_SIZE, MAX_EMPLOYEES_SIZE);
     }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
 }

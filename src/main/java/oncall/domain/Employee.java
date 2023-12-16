@@ -32,4 +32,8 @@ public class Employee {
     public int hashCode() {
         return Objects.hash(nickname);
     }
+
+    public String getNickname() {
+        return nickname;
+    }
 }

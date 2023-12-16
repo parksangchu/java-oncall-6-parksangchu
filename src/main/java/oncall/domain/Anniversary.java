@@ -5,7 +5,7 @@ import static oncall.domain.Constants.THIS_YEAR;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-public enum Holiday {
+public enum Anniversary {
     THE_NEW_YEAR(LocalDate.of(THIS_YEAR.getNumber(), 1, 1)),
     MARCH_ONE_DAY(LocalDate.of(THIS_YEAR.getNumber(), 3, 1)),
     CHILDREN_DAY(LocalDate.of(THIS_YEAR.getNumber(), 5, 5)),
@@ -16,11 +16,11 @@ public enum Holiday {
     CHRISTMAS(LocalDate.of(THIS_YEAR.getNumber(), 12, 25));
     private final LocalDate localDate;
 
-    Holiday(LocalDate localDate) {
+    Anniversary(LocalDate localDate) {
         this.localDate = localDate;
     }
 
-    public static boolean isHoliday(LocalDate localDate) {
+    public static boolean isAnniversary(LocalDate localDate) {
         return Arrays.stream(values())
                 .anyMatch(holiday -> holiday.localDate.equals(localDate));
     }
