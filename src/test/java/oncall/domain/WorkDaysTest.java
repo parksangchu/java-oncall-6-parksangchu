@@ -10,7 +10,7 @@ class WorkDaysTest {
     @Test
     void create() {
         assertThatThrownBy(() -> new WorkDays("13,월")).isInstanceOf(IllegalArgumentException.class);
-        WorkDays workDays = new WorkDays("6,화");
+        WorkDays workDays = new WorkDays("5,월");
         List<LocalDate> localDateList = workDays.getLocalDates();
         localDateList.stream()
                 .map(LocalDate::getDayOfMonth)

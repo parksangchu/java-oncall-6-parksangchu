@@ -11,6 +11,8 @@ import oncall.util.Util;
 import oncall.util.Validator;
 
 public class WorkDays {
+    private static final int FEBRUARY = 2;
+    private static final int LAST_DAY_OF_FEBRUARY = 28;
     private static final int MIN_MONTH = 1;
     private static final int MAX_MONTH = 12;
     private final List<LocalDate> localDates;
@@ -24,6 +26,11 @@ public class WorkDays {
 
     private List<LocalDate> getWorkDays(int month, DayOfWeek dayOfWeek) {
         int startDay = getStartDay(month, dayOfWeek);
+        if (month == FEBRUARY) {
+            return IntStream.rangeClosed(startDay, LAST_DAY_OF_FEBRUARY)
+                    .mapToObj(day -> LocalDate.of(THIS_YEAR.getNumber(), month, day))
+                    .collect(Collectors.toList());
+        }
         int lastDay = getLastDay(month, startDay);
         return IntStream.rangeClosed(startDay, lastDay)
                 .mapToObj(day -> LocalDate.of(THIS_YEAR.getNumber(), month, day))
