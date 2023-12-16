@@ -68,16 +68,32 @@
 - 닉네임의 중복을 검증한다.
 - 사원 숫자를 검증하고 사원을 저장한다.
 
-### Holiday
+### Anniversary
 
 - 법정공휴일을 저장한다.
+
+### Constants
+
+- 올해를 저장한다.
 
 ### WorkDays
 
 - 월과 요일을 입력받아 날짜 목록을 생성한다.
     - 월이 올바르지 않을 경우 예외처리한다.
 
+### WorDaysOfWeek
+
+- 근무요일을 저장한다.
+
 ### AllocationService
 
 - 배정을 진행한다.
+
+### Allocation
+
+- 근무자와 시간을 저장한다.
+
+### AllocationGroup
+
+- Allocation 을 저장한다.
 
