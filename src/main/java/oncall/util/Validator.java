@@ -1,6 +1,7 @@
 package oncall.util;
 
 import java.util.List;
+import oncall.domain.Employee;
 
 public class Validator {
     private static final String NUMBER_REGEX = "^[0-9]+$";
@@ -18,10 +19,10 @@ public class Validator {
         }
     }
 
-    public static void validateDuplicated(List<String> strings) {
-        if (strings.stream()
+    public static void validateDuplicated(List<Employee> employees) {
+        if (employees.stream()
                 .distinct()
-                .count() != strings.size()) {
+                .count() != employees.size()) {
             throw new IllegalArgumentException(ErrorMessage.DUPLICATED.getMessage());
         }
     }
