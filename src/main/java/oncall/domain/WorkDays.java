@@ -1,5 +1,7 @@
 package oncall.domain;
 
+import static oncall.domain.Constants.THIS_YEAR;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -9,8 +11,6 @@ import oncall.util.Util;
 import oncall.util.Validator;
 
 public class WorkDays {
-    private static final int THIS_YEAR = 2023;
-    private static final int START_DAY = 1;
     private static final int MIN_MONTH = 1;
     private static final int MAX_MONTH = 12;
     private final List<LocalDate> localDates;
@@ -26,14 +26,14 @@ public class WorkDays {
         int startDay = getStartDay(month, dayOfWeek);
         int lastDay = getLastDay(month, startDay);
         return IntStream.rangeClosed(startDay, lastDay)
-                .mapToObj(day -> LocalDate.of(THIS_YEAR, month, day))
+                .mapToObj(day -> LocalDate.of(THIS_YEAR.getNumber(), month, day))
                 .collect(Collectors.toList());
     }
 
     private int getStartDay(int month, DayOfWeek dayOfWeek) {
         int day = 0;
         for (int i = 1; i <= 7; i++) {
-            LocalDate localDate = LocalDate.of(THIS_YEAR, month, i);
+            LocalDate localDate = LocalDate.of(THIS_YEAR.getNumber(), month, i);
             if (localDate.getDayOfWeek() == dayOfWeek) {
                 day = i;
                 break;
@@ -43,7 +43,7 @@ public class WorkDays {
     }
 
     private int getLastDay(int month, int day) {
-        LocalDate startDate = LocalDate.of(THIS_YEAR, month, day);
+        LocalDate startDate = LocalDate.of(THIS_YEAR.getNumber(), month, day);
         LocalDate lastDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
         return lastDate.getDayOfMonth();
     }
