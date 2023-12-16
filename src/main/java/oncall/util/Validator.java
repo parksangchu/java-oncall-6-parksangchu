@@ -12,8 +12,7 @@ public class Validator {
         }
     }
 
-    public static void validateRange(String input, int min, int max) {
-        int number = Integer.parseInt(input);
+    public static void validateRange(int number, int min, int max) {
         if (number < min || number > max) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_OUT_OF_INT_RANGE.getMessage());
         }
