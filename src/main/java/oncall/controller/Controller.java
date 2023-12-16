@@ -22,9 +22,10 @@ public class Controller {
     public void start() {
         WorkDays workDays = createWorkDays();
         EmployeeGroup weekdayGroup = createWeekdayGroup();
-        EmployeeGroup weekendGroup = createWeekendGroup();
+        EmployeeGroup weekendGroup = createWeekendGroup(weekdayGroup);
         AllocationService allocationService = new AllocationService(workDays, weekdayGroup, weekendGroup);
         AllocationGroup allocationGroup = allocationService.allocate();
+        outputView.printResult(allocationGroup.getAllocations());
     }
 
 
@@ -53,13 +54,14 @@ public class Controller {
         }
     }
 
-    private EmployeeGroup createWeekendGroup() {
+    private EmployeeGroup createWeekendGroup(EmployeeGroup employeeGroup) {
         while (true) {
             try {
-                List<String> input = inputView.readWeekdayEmployees();
+                List<String> input = inputView.readWeekendEmployees();
                 List<Employee> employees = input.stream()
                         .map(Employee::new)
                         .collect(Collectors.toList());
+                employeeGroup.validateEqual(employees);
                 return new EmployeeGroup(employees);
             } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e);

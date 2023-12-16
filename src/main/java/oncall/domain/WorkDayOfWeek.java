@@ -28,4 +28,13 @@ public enum WorkDayOfWeek {
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_DAY_OF_WEEK.getMessage()));
         return workDayOfWeek.dayOfWeek;
     }
+
+    public static String StringOf(DayOfWeek target) {
+        WorkDayOfWeek tmp = Arrays.stream(values())
+                .filter(workDayOfWeek -> workDayOfWeek.dayOfWeek == target)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_DAY_OF_WEEK.getMessage()));
+        return tmp.name;
+    }
+
 }

@@ -30,7 +30,33 @@ public class AllocationService {
             Allocation allocation = createAllocation(localDate, weekdayEmployees, weekendEmployees);
             allocations.add(allocation);
         }
+//        List<Allocation> changedAllocation = reAllocate(allocations);
         return new AllocationGroup(allocations);
+    }
+
+    //
+//    private List<Allocation> reAllocate(List<Allocation> allocations) {
+//        List<Allocation> changedAllocations = new ArrayList<>(allocations);
+//        for (int i = 0; i < allocations.size() - 1; i++) {
+//            Employee thisEmployee = allocations.get(i).getEmployee();
+//            Employee nextEmployee = allocations.get(i + 1).getEmployee();
+//            if (thisEmployee.equals(nextEmployee)) {
+//                Employee tmp = nextEmployee;
+//                int finalI = i + 1;
+//                Employee change = allocations.stream()
+//                        .skip(i + 2)
+//                        .filter(allocation -> equal(allocation.getLocalDate(),allocations.get(finalI).getLocalDate()))
+//                        .map()
+//                        .findFirst()
+//                        .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_CHANGE.getMessage()));
+//                changedAllocations.get()
+//            }
+//        }
+//        return changedAllocations;
+    private boolean equal(LocalDate localDate1, LocalDate localDate2) {
+        boolean isHoliday1 = isHoliday(localDate1);
+        boolean isHoliday2 = isHoliday(localDate2);
+        return isHoliday1 == isHoliday2;
     }
 
     private Allocation createAllocation(

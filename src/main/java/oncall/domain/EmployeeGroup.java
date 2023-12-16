@@ -1,6 +1,7 @@
 package oncall.domain;
 
 import java.util.List;
+import oncall.util.ErrorMessage;
 import oncall.util.Validator;
 
 public class EmployeeGroup {
@@ -24,5 +25,12 @@ public class EmployeeGroup {
 
     public List<Employee> getEmployees() {
         return employees;
+    }
+
+    public void validateEqual(List<Employee> employees) {
+        if (employees.stream()
+                .anyMatch(employee -> !this.employees.contains(employee))) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_GROUP.getMessage());
+        }
     }
 }

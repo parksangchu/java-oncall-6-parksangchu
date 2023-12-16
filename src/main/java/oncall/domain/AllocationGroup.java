@@ -13,4 +13,5 @@ public class AllocationGroup {
     public List<Allocation> getAllocations() {
         return Collections.unmodifiableList(allocations);
     }
+
 }
