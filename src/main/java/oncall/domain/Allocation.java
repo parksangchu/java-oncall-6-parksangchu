@@ -38,4 +38,8 @@ public class Allocation {
     public int getMonth() {
         return localDate.getMonthValue();
     }
+
+    public boolean is(Employee employee) {
+        return this.employee.equals(employee);
+    }
 }

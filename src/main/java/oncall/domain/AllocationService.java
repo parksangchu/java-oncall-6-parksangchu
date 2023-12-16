@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import oncall.util.ErrorMessage;
 
 public class AllocationService {
     private final WorkDays workDays;
@@ -30,29 +31,34 @@ public class AllocationService {
             Allocation allocation = createAllocation(localDate, weekdayEmployees, weekendEmployees);
             allocations.add(allocation);
         }
-//        List<Allocation> changedAllocation = reAllocate(allocations);
-        return new AllocationGroup(allocations);
+        List<Allocation> changedAllocation = reAllocate(allocations);
+        return new AllocationGroup(changedAllocation);
     }
 
-    //
-//    private List<Allocation> reAllocate(List<Allocation> allocations) {
-//        List<Allocation> changedAllocations = new ArrayList<>(allocations);
-//        for (int i = 0; i < allocations.size() - 1; i++) {
-//            Employee thisEmployee = allocations.get(i).getEmployee();
-//            Employee nextEmployee = allocations.get(i + 1).getEmployee();
-//            if (thisEmployee.equals(nextEmployee)) {
-//                Employee tmp = nextEmployee;
-//                int finalI = i + 1;
-//                Employee change = allocations.stream()
-//                        .skip(i + 2)
-//                        .filter(allocation -> equal(allocation.getLocalDate(),allocations.get(finalI).getLocalDate()))
-//                        .map()
-//                        .findFirst()
-//                        .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_CHANGE.getMessage()));
-//                changedAllocations.get()
-//            }
-//        }
-//        return changedAllocations;
+    private List<Allocation> reAllocate(List<Allocation> allocations) {
+        List<Allocation> changedAllocations = new ArrayList<>(allocations);
+        for (int i = 0; i < changedAllocations.size() - 1; i++) {
+            Employee thisEmployee = changedAllocations.get(i).getEmployee();
+            Employee nextEmployee = changedAllocations.get(i + 1).getEmployee();
+            if (thisEmployee.equals(nextEmployee)) {
+                Employee tmp = nextEmployee;
+                int finalI = i + 1;
+                Employee change = changedAllocations.stream()
+                        .skip(i + 2)
+                        .filter(allocation -> equal(allocation.getLocalDate(), allocations.get(finalI).getLocalDate()))
+                        .map(Allocation::getEmployee)
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_CHANGE.getMessage()));
+                changedAllocations.get(i + 1).changeEmployee(change);
+                changedAllocations.stream()
+                        .skip(i + 2)
+                        .filter(allocation -> allocation.is(change))
+                        .forEach(allocation -> allocation.changeEmployee(tmp));
+            }
+        }
+        return changedAllocations;
+    }
+
     private boolean equal(LocalDate localDate1, LocalDate localDate2) {
         boolean isHoliday1 = isHoliday(localDate1);
         boolean isHoliday2 = isHoliday(localDate2);
