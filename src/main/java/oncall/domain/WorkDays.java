@@ -1,6 +1,6 @@
 package oncall.domain;
 
-import static oncall.domain.Constants.THIS_YEAR;
+import static oncall.domain.ThisYear.THIS_YEAR;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class WorkDays {
     private static final int LAST_DAY_OF_FEBRUARY = 28;
     private static final int MIN_MONTH = 1;
     private static final int MAX_MONTH = 12;
-    private final List<LocalDate> localDates;
+    private final List<WorkDay> localDates;
 
     public WorkDays(String input) {
         List<String> separatedInput = Util.splitByComma(input);
@@ -24,16 +24,16 @@ public class WorkDays {
         this.localDates = getWorkDays(month, dayOfWeek);
     }
 
-    private List<LocalDate> getWorkDays(int month, DayOfWeek dayOfWeek) {
+    private List<WorkDay> getWorkDays(int month, DayOfWeek dayOfWeek) {
         int startDay = getStartDay(month, dayOfWeek);
         if (month == FEBRUARY) {
             return IntStream.rangeClosed(startDay, LAST_DAY_OF_FEBRUARY)
-                    .mapToObj(day -> LocalDate.of(THIS_YEAR.getNumber(), month, day))
+                    .mapToObj(day -> new WorkDay(LocalDate.of(THIS_YEAR.getNumber(), month, day)))
                     .collect(Collectors.toList());
         }
         int lastDay = getLastDay(month, startDay);
         return IntStream.rangeClosed(startDay, lastDay)
-                .mapToObj(day -> LocalDate.of(THIS_YEAR.getNumber(), month, day))
+                .mapToObj(day -> new WorkDay(LocalDate.of(THIS_YEAR.getNumber(), month, day)))
                 .collect(Collectors.toList());
     }
 
