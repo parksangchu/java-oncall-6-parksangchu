@@ -1,11 +1,11 @@
 package oncall.domain;
 
-public enum Constants {
+public enum ThisYear {
     THIS_YEAR(2023);
 
     private final int number;
 
-    Constants(int number) {
+    ThisYear(int number) {
         this.number = number;
     }
 
