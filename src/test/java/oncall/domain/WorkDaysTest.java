@@ -12,7 +12,7 @@ class WorkDaysTest {
         WorkDays workDays = new WorkDays("5,월");
         List<WorkDay> workdays = workDays.getWorkDays();
         workdays.stream()
-                .map(workDay -> workDay.getDay())
+                .map(WorkDay::getDay)
                 .forEach(System.out::println);
     }
 

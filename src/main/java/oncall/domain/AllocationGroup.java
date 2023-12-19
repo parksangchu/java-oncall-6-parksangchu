@@ -19,12 +19,10 @@ public class AllocationGroup {
     public List<Allocation> reAllocate(List<Allocation> allocations) {
         List<Allocation> changedAllocations = new ArrayList<>(allocations);
         for (int i = 1; i < changedAllocations.size(); i++) {
-            int prevIndex = i - 1;
-            int thisIndex = i;
-            Allocation prevAllocation = changedAllocations.get(prevIndex);
-            Allocation thisAllocation = changedAllocations.get(thisIndex);
+            Allocation prevAllocation = changedAllocations.get(i - 1);
+            Allocation thisAllocation = changedAllocations.get(i);
             if (thisAllocation.equals(prevAllocation)) {
-                Allocation targetAllocation = findTargetAllocation(changedAllocations, thisIndex, thisAllocation);
+                Allocation targetAllocation = findTargetAllocation(changedAllocations, i, thisAllocation);
                 thisAllocation.changeEmployee(targetAllocation);
             }
         }
