@@ -2,7 +2,6 @@ package oncall.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +10,9 @@ class WorkDaysTest {
     void create() {
         assertThatThrownBy(() -> new WorkDays("13,월")).isInstanceOf(IllegalArgumentException.class);
         WorkDays workDays = new WorkDays("5,월");
-        List<LocalDate> localDateList = workDays.getLocalDates();
-        localDateList.stream()
-                .map(LocalDate::getDayOfMonth)
+        List<WorkDay> workdays = workDays.getWorkDays();
+        workdays.stream()
+                .map(workDay -> workDay.getDay())
                 .forEach(System.out::println);
     }
 

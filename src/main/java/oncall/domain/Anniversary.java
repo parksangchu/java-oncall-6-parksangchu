@@ -1,6 +1,6 @@
 package oncall.domain;
 
-import static oncall.domain.Constants.THIS_YEAR;
+import static oncall.domain.ThisYear.THIS_YEAR;
 
 import java.time.LocalDate;
 import java.util.Arrays;

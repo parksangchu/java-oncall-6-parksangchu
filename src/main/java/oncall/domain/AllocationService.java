@@ -1,88 +1,39 @@
 package oncall.domain;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import oncall.util.ErrorMessage;
 
 public class AllocationService {
     private final WorkDays workDays;
-    private final EmployeeGroup weekdayGroup;
-    private final EmployeeGroup weekendGroup;
+    private final EmployeeGroup employeeGroup;
 
-    public AllocationService(WorkDays workDays, EmployeeGroup weekdayGroup, EmployeeGroup weekendGroup) {
+    public AllocationService(WorkDays workDays, EmployeeGroup employeeGroup) {
         this.workDays = workDays;
-        this.weekdayGroup = weekdayGroup;
-        this.weekendGroup = weekendGroup;
+        this.employeeGroup = employeeGroup;
     }
 
     public AllocationGroup allocate() {
         List<Allocation> allocations = new ArrayList<>();
-        List<Employee> weekdayEmployees = new ArrayList<>(weekdayGroup.getEmployees());
-        List<Employee> weekendEmployees = new ArrayList<>(weekendGroup.getEmployees());
-        for (LocalDate localDate : workDays.getLocalDates()) {
+        List<Employee> weekdayEmployees = new ArrayList<>();
+        List<Employee> weekendEmployees = new ArrayList<>();
+        for (WorkDay workDay : workDays.getWorkDays()) {
             if (weekdayEmployees.isEmpty()) {
-                weekdayEmployees = new ArrayList<>(weekdayGroup.getEmployees());
+                weekdayEmployees = new ArrayList<>(employeeGroup.getWeekdayEmployees());
             }
             if (weekendEmployees.isEmpty()) {
-                weekendEmployees = new ArrayList<>(weekdayGroup.getEmployees());
+                weekendEmployees = new ArrayList<>(employeeGroup.getWeekendEmployees());
             }
-            Allocation allocation = createAllocation(localDate, weekdayEmployees, weekendEmployees);
+            Allocation allocation = createAllocation(workDay, weekdayEmployees, weekendEmployees);
             allocations.add(allocation);
         }
-        List<Allocation> changedAllocation = reAllocate(allocations);
-        return new AllocationGroup(changedAllocation);
+        return new AllocationGroup(allocations);
     }
 
-    private List<Allocation> reAllocate(List<Allocation> allocations) {
-        List<Allocation> changedAllocations = new ArrayList<>(allocations);
-        for (int i = 0; i < changedAllocations.size() - 1; i++) {
-            Employee thisEmployee = changedAllocations.get(i).getEmployee();
-            Employee nextEmployee = changedAllocations.get(i + 1).getEmployee();
-            if (thisEmployee.equals(nextEmployee)) {
-                Employee tmp = nextEmployee;
-                int targetIndex = i + 1;
-                Employee change = findTargetEmployee(changedAllocations, i, targetIndex);
-                changedAllocations.get(i + 1).changeEmployee(change);
-                changedAllocations.stream()
-                        .skip(i + 2)
-                        .filter(allocation -> allocation.is(change))
-                        .forEach(allocation -> allocation.changeEmployee(tmp));
-            }
+    private Allocation createAllocation(WorkDay workDay, List<Employee> weekdayEmployees,
+                                        List<Employee> weekendEmployees) {
+        if (workDay.isHoliday()) {
+            return new Allocation(workDay, weekendEmployees.remove(0));
         }
-        return changedAllocations;
-    }
-
-    private Employee findTargetEmployee(List<Allocation> changedAllocations, int i, int targetIndex) {
-        return changedAllocations.stream()
-                .skip(i + 2)
-                .filter(allocation -> equal(allocation.getLocalDate(),
-                        changedAllocations.get(targetIndex).getLocalDate()))
-                .map(Allocation::getEmployee)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.INVALID_CHANGE.getMessage()));
-    }
-
-    private boolean equal(LocalDate localDate1, LocalDate localDate2) {
-        boolean isHoliday1 = isHoliday(localDate1);
-        boolean isHoliday2 = isHoliday(localDate2);
-        return isHoliday1 == isHoliday2;
-    }
-
-    private Allocation createAllocation(
-            LocalDate localDate, List<Employee> weekdayEmployees, List<Employee> weekendEmployees) {
-        if (!isHoliday(localDate)) {
-            return new Allocation(localDate, weekdayEmployees.remove(0));
-        }
-        return new Allocation(localDate, weekendEmployees.remove(0));
-    }
-
-    private boolean isWeekend(LocalDate localDate) {
-        return localDate.getDayOfWeek() == DayOfWeek.SATURDAY || localDate.getDayOfWeek() == DayOfWeek.SUNDAY;
-    }
-
-    private boolean isHoliday(LocalDate localDate) {
-        return isWeekend(localDate) || Anniversary.isAnniversary(localDate);
+        return new Allocation(workDay, weekdayEmployees.remove(0));
     }
 }

@@ -1,22 +1,14 @@
 package oncall.domain;
 
-import java.time.LocalDate;
+import java.util.Objects;
 
 public class Allocation {
-    private final LocalDate localDate;
+    private final WorkDay workDay;
     private Employee employee;
 
-    public Allocation(LocalDate localDate, Employee employee) {
-        this.localDate = localDate;
+    public Allocation(WorkDay workDay, Employee employee) {
+        this.workDay = workDay;
         this.employee = employee;
-    }
-
-    public LocalDate getLocalDate() {
-        return localDate;
-    }
-
-    public Employee getEmployee() {
-        return employee;
     }
 
     public String getNickName() {
@@ -24,22 +16,45 @@ public class Allocation {
     }
 
     public String getDayOfWeekName() {
-        return WorkDayOfWeek.StringOf(localDate.getDayOfWeek());
-    }
-
-    public void changeEmployee(Employee employee) {
-        this.employee = employee;
+        return workDay.getDayOfWeekName();
     }
 
     public int getDay() {
-        return localDate.getDayOfMonth();
+        return workDay.getDay();
     }
 
     public int getMonth() {
-        return localDate.getMonthValue();
+        return workDay.getMonth();
     }
 
-    public boolean is(Employee employee) {
-        return this.employee.equals(employee);
+    public boolean isWeekdayHoliday() {
+        return workDay.isWeekdayHoliday();
+    }
+
+    public void changeEmployee(Allocation allocation) {
+        Employee tmp = this.employee;
+        this.employee = allocation.employee;
+        allocation.employee = tmp;
+    }
+
+
+    public boolean isEqualWorkdayGroup(Allocation allocation) {
+        return this.workDay.equals(allocation.workDay);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Allocation that)) {
+            return false;
+        }
+        return Objects.equals(employee, that.employee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employee);
     }
 }

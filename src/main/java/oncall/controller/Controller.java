@@ -21,13 +21,21 @@ public class Controller {
 
     public void start() {
         WorkDays workDays = createWorkDays();
-        EmployeeGroup weekdayGroup = createWeekdayGroup();
-        EmployeeGroup weekendGroup = createWeekendGroup(weekdayGroup);
-        AllocationService allocationService = new AllocationService(workDays, weekdayGroup, weekendGroup);
-        AllocationGroup allocationGroup = allocationService.allocate();
+        AllocationGroup allocationGroup = createAllocationGroup(workDays);
         outputView.printResult(allocationGroup.getAllocations());
     }
 
+    private AllocationGroup createAllocationGroup(WorkDays workDays) {
+        while (true) {
+            try {
+                EmployeeGroup employeeGroup = createEmployeeGroup();
+                AllocationService allocationService = new AllocationService(workDays, employeeGroup);
+                return allocationService.allocate();
+            } catch (IllegalArgumentException e) {
+                outputView.printErrorMessage(e);
+            }
+        }
+    }
 
     private WorkDays createWorkDays() {
         while (true) {
@@ -40,29 +48,18 @@ public class Controller {
         }
     }
 
-    private EmployeeGroup createWeekdayGroup() {
+    private EmployeeGroup createEmployeeGroup() {
         while (true) {
             try {
-                List<String> input = inputView.readWeekdayEmployees();
-                List<Employee> employees = input.stream()
+                List<Employee> weekdayEmployees = inputView.readWeekdayEmployees()
+                        .stream()
                         .map(Employee::new)
                         .collect(Collectors.toList());
-                return new EmployeeGroup(employees);
-            } catch (IllegalArgumentException e) {
-                outputView.printErrorMessage(e);
-            }
-        }
-    }
-
-    private EmployeeGroup createWeekendGroup(EmployeeGroup employeeGroup) {
-        while (true) {
-            try {
-                List<String> input = inputView.readWeekendEmployees();
-                List<Employee> employees = input.stream()
+                List<Employee> weekendEmployees = inputView.readWeekendEmployees()
+                        .stream()
                         .map(Employee::new)
                         .collect(Collectors.toList());
-                employeeGroup.validateEqual(employees);
-                return new EmployeeGroup(employees);
+                return new EmployeeGroup(weekdayEmployees, weekendEmployees);
             } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e);
             }

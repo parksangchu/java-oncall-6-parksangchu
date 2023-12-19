@@ -72,9 +72,9 @@
 
 - 법정공휴일을 저장한다.
 
-### Constants
+### ThisYear
 
-- 올해를 저장한다.
+- 올해 년도의 값을 저장한다.
 
 ### WorkDays
 
@@ -96,4 +96,5 @@
 ### AllocationGroup
 
 - Allocation 을 저장한다.
+- 연속 근무자가 있을 시 조정한다.
 

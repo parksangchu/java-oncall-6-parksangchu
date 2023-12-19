@@ -4,6 +4,7 @@ import static oncall.domain.ThisYear.THIS_YEAR;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -65,7 +66,7 @@ public class WorkDays {
         return WorkDayOfWeek.of(separatedInput.get(1));
     }
 
-    public List<LocalDate> getLocalDates() {
-        return localDates;
+    public List<WorkDay> getWorkDays() {
+        return Collections.unmodifiableList(localDates);
     }
 }

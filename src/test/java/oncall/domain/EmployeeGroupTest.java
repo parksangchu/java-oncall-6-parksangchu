@@ -14,6 +14,6 @@ class EmployeeGroupTest {
             Employee employee = new Employee("상추" + i);
             employees.add(employee);
         }
-        assertThatThrownBy(() -> new EmployeeGroup(employees)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new EmployeeGroup(employees, employees)).isInstanceOf(IllegalArgumentException.class);
     }
 }
